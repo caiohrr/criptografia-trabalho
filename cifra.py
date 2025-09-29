@@ -4,12 +4,20 @@ def shiftUnicode(char, shift, modulo=2048):
     new_code = (ord(char) + shift) % modulo 
     return chr(new_code)
 
-def fibonacciTranspose(plain_text, total_chars, k1, k2):
+def generateFibonacciPermutation(total_chars, k1, k2):
     f1, f2 = k1, k2
-    transposed_text = []
+    available = list(range(total_chars))
+    permutation = []
     for i in range(total_chars):
-        transposed_text.append(plain_text[f1 % total_chars])
+        index = f1 % len(available)
+        permutation.append(available.pop(index))
         f1, f2 = f2, f1 + f2
+
+    return permutation
+
+def fibonacciTranspose(plain_text, total_chars, k1, k2):
+    permutation = generateFibonacciPermutation(total_chars, k1, k2)
+    transposed_text = [plain_text[i] for i in permutation]
 
     return "".join(transposed_text)
 
