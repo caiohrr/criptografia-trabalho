@@ -1,5 +1,28 @@
 import sys
 
+def shiftUnicode(char, shift, modulo=2048):
+    new_code = (ord(char) + shift) % modulo 
+    return chr(new_code)
+
+def fibonacciTranspose(plain_text, total_chars, k1, k2):
+    f1, f2 = k1, k2
+    transposed_text = []
+    for i in range(total_chars):
+        transposed_text.append(plain_text[f1 % total_chars])
+        f1, f2 = f2, f1 + f2
+
+    return "".join(transposed_text)
+
+def fibonacciSubstitute(plain_text, total_chars, k1, k2):
+    f1, f2 = k1, k2
+    substituted_text = [] 
+    for char in plain_text:
+        cipher_char = shiftUnicode(char, f1, 127)
+        substituted_text.append(cipher_char)
+        f1, f2 = f2, f1 + f2
+
+    return "".join(substituted_text)
+
 if __name__ == "__main__":
     input_file_name = sys.argv[1]
     key = sys.argv[2]
@@ -19,15 +42,11 @@ if __name__ == "__main__":
     
     print(f"k1 = {k1}, k2 = {k2}")
 
-    f1, f2 = k1, k2
-    ciphered_text = []
-    for i in range(total_chars):
-        ciphered_text.append(plain_text[f1 % total_chars])
-        tmp = f1 + f2
-        f1, f2 = f2, tmp
+    substituted_text = fibonacciSubstitute(plain_text, total_chars, k1, k2)
+    ciphered_text = fibonacciTranspose(substituted_text, total_chars, k1, k2)
 
     output_file_name = f"{input_file_name.split('.')[0]}-cifrado.txt"
     with open(output_file_name, "w", encoding="utf-8") as output_file:
-        output_file.write("".join(ciphered_text))
+        output_file.write(ciphered_text)
 
     print(f"Arquivo cifrado salvo em {output_file_name}")
