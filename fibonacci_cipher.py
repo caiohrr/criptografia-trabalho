@@ -32,10 +32,14 @@ def fibonacciSubstitute(plain_text, total_chars, k1, k2):
     return "".join(substituted_text)
 
 if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("Uso: python fibonacci_cipher.py <arquivo> <chave> [--decrypt]")
+        sys.exit(1)
+
     input_file_name = sys.argv[1]
     key = sys.argv[2]
+    decrypt_mode = len(sys.argv) > 3 and sys.argv[3] == "--decrypt"
 
-    print(f"Cifrando o arquivo {input_file_name} com a chave {key}")
 
     with open(input_file_name, 'r', encoding="utf-8") as input_file:
         plain_text = input_file.read()
@@ -50,11 +54,16 @@ if __name__ == "__main__":
     
     print(f"k1 = {k1}, k2 = {k2}")
 
-    substituted_text = fibonacciSubstitute(plain_text, total_chars, k1, k2)
-    ciphered_text = fibonacciTranspose(substituted_text, total_chars, k1, k2)
+    if decrypt_mode:
+        print(f"Decifrando o arquivo {input_file_name} com a chave {key}")
+    else:
+        print(f"Cifrando o arquivo {input_file_name} com a chave {key}")
 
-    output_file_name = f"{input_file_name.split('.')[0]}-cifrado.txt"
-    with open(output_file_name, "w", encoding="utf-8") as output_file:
-        output_file.write(ciphered_text)
+        substituted_text = fibonacciSubstitute(plain_text, total_chars, k1, k2)
+        ciphered_text = fibonacciTranspose(substituted_text, total_chars, k1, k2)
 
-    print(f"Arquivo cifrado salvo em {output_file_name}")
+        output_file_name = f"{input_file_name.split('.')[0]}-cifrado.txt"
+        with open(output_file_name, "w", encoding="utf-8") as output_file:
+            output_file.write(ciphered_text)
+
+        print(f"Arquivo cifrado salvo em {output_file_name}")
